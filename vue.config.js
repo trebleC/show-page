@@ -1,14 +1,37 @@
 const { defineConfig } = require('@vue/cli-service')
+const path = require('path')
+
+function assetsPath(_path) {
+  const assetsSubDirectory = process.env.NODE_ENV === 'production' ?
+    'static' :
+    'static'
+  return path.posix.join(assetsSubDirectory, _path)
+}
 
 module.exports = defineConfig({
   transpileDependencies: true,
-  chainWebpack: config => {
-    config
-    .plugin('html')
-    .tap(args => {
-        args[0].title = '轻应用'
-        return args
-    })},
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.(woff2?|eot|ttf|otf)(\?.*)$/,
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: assetsPath('fonrs/[name].[hash:7].[ext]')
+          }
+        }
+      ]
+    },
+  },
+    chainWebpack: config => {
+      config
+        .plugin('html')
+        .tap(args => {
+          args[0].title = 'shop'
+          return args
+        })
+    },
 
     devServer: {
       proxy: {
@@ -27,4 +50,4 @@ module.exports = defineConfig({
         },
       },
     }
-})
+  })
