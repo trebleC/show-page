@@ -1,6 +1,5 @@
 <template>
     <div class="tab-bar">
-
         <div class="tabs">
             <img class="logo" src="../../assets/logo.png" alt="" srcset="">
             <div class="tab" v-for="(item, index) in tabs" :key="index" @click="onNav(item)">{{ item.name }}</div>
@@ -66,6 +65,9 @@ export default {
     *{
         font-family: 'TrajanPro-Regular',Arial;
     }
+    position:sticky;
+    z-index: 999;
+    top: 0;
     padding: 0 100px;
     width: 100%;
     height: 67px;

@@ -151,14 +151,7 @@ export default {
     .post-img {
         width: 100%;
         height: 234px;
-        object-fit: cover;
-        border-radius: 3px;
-        transition: all .5s;
-        cursor: pointer;
 
-        &:hover {
-            transform: scale(1.05);
-        }
     }
 
     .name {

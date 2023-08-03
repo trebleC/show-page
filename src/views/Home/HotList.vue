@@ -1,20 +1,24 @@
 <template>
     <div class="hot-list">
-        <div class="list" :style="{width:cardListWidth}">
+        <div class="list" :style="{width:cardListWidth}" ref="hostlist">
             <div class="card" v-for="(item, index) in cardList" :key="'card' + index">
-                <img class="card-img" :src="item.imageUrl" alt="" srcset="" @click="jumpPage(item)">
+                <ImageShow class="card-img" contain :path="item.imageUrl" alt="" srcset="" @click="jumpPage(item)" />
                 <div class="name">{{ item.name }}</div>
             </div>
         </div>
+        <PageMng :count="paginationCount" @onChangePage="onChangePage" />
     </div>
 </template>
     
 <script>
-import { ref, reactive, onMounted } from 'vue'
-
+import { ref, reactive, onMounted,computed } from 'vue'
+import PageMng from '@/components/PageMng.vue'
+import ImageShow from '@/components/ImageShow.vue'
 export default {
     name: 'PostList',
+    components:{PageMng,ImageShow},
     setup(props, ctx) {
+        let pageNo = ref(0)
         let cardList = reactive([{
             imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
             url: 'https://www.baidu.com/',
@@ -47,15 +51,33 @@ export default {
         ])
 
         const jumpPage = (item) => {
-            window.open(item.url)
+            //window.open(item.url)
         }
         const cardListWidth = ref('100%')
-        cardListWidth.value = (cardList.length * 359) + 'px'
+        onMounted(()=>{
+            cardListWidth.value = (cardList.length * 477) + 'px'
+        })
+     
+        let paginationCount = computed(()=>{
+            return Math.floor(cardList.length/3)
+        })
+        const onChangePage = (index)=>{
+            pageNo.value = index
+            hostlist.value.style.transitionDuration = `0.5s`
+            hostlist.value.style.transform = `translate3d(-${index*1300}px, 0,0)`
+        }
+        let hostlist = ref(null)
+  
+   
         
         return {
             cardList,
             jumpPage,
-            cardListWidth
+            cardListWidth,
+            pageNo,
+            paginationCount,
+            onChangePage,
+            hostlist
         }
     }
 }
@@ -64,15 +86,26 @@ export default {
 <style lang="less">
 .hot-list {
     width: 100%;
+    overflow-x:hidden; //隐藏水平滚动条
+    transition-duration: 0.5s;
+    position: relative;
     .list {
         padding: 0 40px;
         box-sizing: border-box;
-        clear: both;
+        height: auto;
+
+        &::after{
+            content:'';
+            width: 0;
+            height: 0;
+            display: table;
+            clear: both;
+        }
     }
 
     .card {
         float: left;
-        width: 359px;
+        width: 420px;
         margin-right: 16px;
         cursor: pointer;
 
@@ -86,11 +119,13 @@ export default {
         .name {
             margin-top: 22px;
             line-height: 30px;
-            height: 60px;
             text-align: center;
             font-size: 16px;
             font-family: 'Montserrat-Light';
             color: #111;
         }
     }
-}</style>
+
+
+}
+</style>

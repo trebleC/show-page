@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <div class="carousel-box" ref="carouselBox" v-show="0">
+        <div class="carousel-box" ref="carouselBox">
             <el-carousel trigger="click" :height="carouselHeight">
                 <el-carousel-item v-for="item in carouselList" :key="item">
                     <img class="carousel-img" :src="item.imageUrl" alt="" srcset="" @click="jumpPage(item)">
@@ -8,7 +8,7 @@
             </el-carousel>
         </div>
 
-        <div class="dept" v-show="0">
+        <div class="dept">
             <div class="dept-name">GUANGZHOU VITAS LACE CO.,LTD</div>
             <div class="dept-desc-box">
                 <div class="dept-desc" v-html="deptDesc"></div>
@@ -16,9 +16,14 @@
             </div>
         </div>
 
-        <div class="hot-box">
+        <div class="content-box">
             <div class="common-title">HOT PRODUCTIONS</div>
-            <div class="hot-list-box"> <hot-list></hot-list></div>
+            <hot-list />
+        </div>
+
+        <div class="content-box">
+            <div class="common-title">NEW & EVENTS</div>
+            <news />
         </div>
 
 
@@ -28,10 +33,11 @@
 <script>
 import { ref, reactive, onMounted } from 'vue'
 import { ElCarousel, ElCarouselItem } from 'element-plus'
-import HotList from '@/components/HotList'
+import HotList from '@/views/Home/HotList'
+import News from '@/views/Home/News'
 export default {
     name: 'PostList',
-    components: { ElCarousel, ElCarouselItem,HotList },
+    components: { ElCarousel, ElCarouselItem, HotList,News },
     setup(props, ctx) {
         let carouselBox = ref(null)
         let carouselHeight = ref('400px')
@@ -53,7 +59,7 @@ export default {
 
         })
         const jumpPage = (item) => {
-            window.open(item.url)
+            //window.open(item.url)
         }
 
         let deptDesc = ref('')
@@ -78,9 +84,7 @@ We have our own design teams which master in embroidery.With more than 40pcs lac
     overflow: hidden;
     margin-left: auto;
     margin-right: auto;
-
     max-width: 100%;
-    max-height: 720px;
 
     .carousel-box {
         .carousel-img {
@@ -107,7 +111,7 @@ We have our own design teams which master in embroidery.With more than 40pcs lac
     }
 
 
-    .dept{
+    .dept {
         display: flex;
         justify-content: space-between;
         margin-top: 95px;
@@ -115,9 +119,11 @@ We have our own design teams which master in embroidery.With more than 40pcs lac
         width: 1200px;
         margin: 0 auto;
         zoom: 1;
-        .dept-name{
+        margin-top: 80px;
+
+        .dept-name {
             width: 30%;
-            font-family: 'TrajanPro-Regular',Arial;
+            font-family: 'TrajanPro-Regular', Arial;
             position: relative;
             color: #111;
             line-height: 57px;
@@ -125,18 +131,21 @@ We have our own design teams which master in embroidery.With more than 40pcs lac
             font-weight: bold;
             text-transform: uppercase;
         }
-        .dept-desc-box{
+
+        .dept-desc-box {
             width: 60%;
         }
-        .dept-desc{
-   
+
+        .dept-desc {
+
             margin-bottom: 30px;
             font-family: 'Montserrat-Light';
             line-height: 30px;
-            white-space:pre-line;
+            white-space: pre-line;
             font-size: 14px;
         }
-        .btn-more{
+
+        .btn-more {
             display: inline-block;
             width: 190px;
             height: 55px;
@@ -146,25 +155,29 @@ We have our own design teams which master in embroidery.With more than 40pcs lac
             color: #fff;
             text-transform: uppercase;
             max-width: 100%;
-            font-family: 'TrajanPro-Regular',Arial;
+            font-family: 'TrajanPro-Regular', Arial;
             cursor: pointer;
         }
 
     }
-    .hot-box{
+
+    .content-box {
         text-align: center;
 
     }
 }
-.common-title{
+
+.common-title {
     position: relative;
     text-align: center;
     font-size: 40px;
     color: #111;
     font-weight: bold;
-    font-family: 'TrajanPro-Regular',Arial;
+    font-family: 'TrajanPro-Regular', Arial;
     margin-bottom: 80px;
-    &::after{
+    margin-top: 80px;
+
+    &::after {
         content: '';
         position: absolute;
         width: 35px;
@@ -175,5 +188,4 @@ We have our own design teams which master in embroidery.With more than 40pcs lac
         margin-left: -17.5px;
     }
 }
-
 </style>

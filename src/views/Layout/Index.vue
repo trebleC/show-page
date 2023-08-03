@@ -5,6 +5,7 @@
         <div class="content">
             <component :is="cpnTag" v-if="cpnTag"></component>
         </div>
+        <Footer></Footer>
         <el-backtop target=".content" :right="100" :bottom="100" />
 
     </div>
@@ -13,6 +14,7 @@
 import { ref } from 'vue'
 import SideBar from './SideBar.vue'
 import TabBar from './TabBar.vue'
+import Footer from './Footer.vue'
 import PosterList from '@/views/Poster/PosterList'
 import Home from '@/views/Home/Home'
 export default {
@@ -20,6 +22,7 @@ export default {
     components:{
         SideBar,
         TabBar,
+        Footer,
         PosterList,
         Home
     },
@@ -41,7 +44,8 @@ export default {
         max-width: 1920px;
         width: 100vw;
         height: 100vh;
-        background-color: #ececec;
+        background-color: #fff;
+        overflow-x: hidden;
        
         .content{
             position: relative;
