@@ -18,7 +18,7 @@ module.exports = defineConfig({
           loader: 'url-loader',
           options: {
             limit: 10000,
-            name: assetsPath('fonrs/[name].[hash:7].[ext]')
+            name: assetsPath('fonts/[name].[hash:7].[ext]')
           }
         }
       ]

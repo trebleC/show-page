@@ -64,7 +64,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .side-bar {
     padding: 20px 0 60px 0;
     box-sizing: border-box;

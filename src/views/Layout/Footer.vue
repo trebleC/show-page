@@ -116,12 +116,13 @@ export default {
     }
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .footer {
     padding: 40px;
     min-height: 300px;
     width: 100%;
     background-color: #000;
+    box-sizing: border-box;
 
     .wrapper {
         display: flex;

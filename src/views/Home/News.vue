@@ -109,7 +109,7 @@ export default {
 }
 </script>
     
-<style lang="less">
+<style lang="less" scoped>
 .news-list {
     width: 100%;
     overflow-x: hidden; //隐藏水平滚动条

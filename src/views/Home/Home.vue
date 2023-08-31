@@ -15,7 +15,10 @@
                 <div class="btn-more">READ MORE</div>
             </div>
         </div>
-
+        <div class="content-box">
+            <div class="common-title">FEATURED COLLECTION</div>
+            <feat-list />
+        </div>
         <div class="content-box">
             <div class="common-title">HOT PRODUCTIONS</div>
             <hot-list />
@@ -35,9 +38,10 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElCarousel, ElCarouselItem } from 'element-plus'
 import HotList from '@/views/Home/HotList'
 import News from '@/views/Home/News'
+import FeatList from '@/views/Home/FeatList'
 export default {
     name: 'PostList',
-    components: { ElCarousel, ElCarouselItem, HotList,News },
+    components: { ElCarousel, ElCarouselItem, HotList,News,FeatList },
     setup(props, ctx) {
         let carouselBox = ref(null)
         let carouselHeight = ref('400px')
@@ -51,10 +55,12 @@ export default {
         }
         ])
         onMounted(() => {
-            console.log('carouselBox', carouselBox.value.offsetWidth);
-
-            carouselHeight.value = parseInt(6 * carouselBox.value.offsetWidth / 16) + 'px'
-            console.log('carouselHeight', carouselHeight);
+            
+        
+            if(carouselBox && carouselBox.value ){
+                carouselHeight.value = parseInt(6 * carouselBox.value.offsetWidth / 16) + 'px'
+            }
+   
 
 
         })
@@ -78,12 +84,11 @@ We have our own design teams which master in embroidery.With more than 40pcs lac
 }
 </script>
     
-<style lang="less">
+<style lang="less" scoped>
 .home {
     width: 100%;
     overflow: hidden;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto 100px;
     max-width: 100%;
 
     .carousel-box {

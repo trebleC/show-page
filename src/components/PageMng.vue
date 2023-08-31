@@ -35,7 +35,7 @@ export default {
 }
 </script>
     
-<style lang="less">
+<style lang="less" scoped>
     .pagination-box{
         display: flex;
         justify-content: center;

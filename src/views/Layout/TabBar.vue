@@ -1,8 +1,9 @@
 <template>
-    <div class="tab-bar">
+    <div :class="['tab-bar']" :style="[tabStyle]">
         <div class="tabs">
             <img class="logo" src="../../assets/logo.png" alt="" srcset="">
-            <div class="tab" v-for="(item, index) in tabs" :key="index" @click="onNav(item)">{{ item.name }}</div>
+            <div :class="['tab', { active: activeKey == item.key }]" v-for="(item, index) in tabs" :key="index"
+                @click="onNav(item)">{{ item.name }}</div>
             <div class="options">
 
                 <el-input v-model="searchContent" class="input-box" size="large" placeholder="SEARCH KEYWORD">
@@ -20,54 +21,76 @@
 <script>
 import { Search } from "@element-plus/icons-vue";
 import { ref, onMounted, onUnmounted, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
     name: 'TabBar',
     components: { Search },
     setup(props, ctx) {
+        const router = new useRouter()
+        const activeKey = ref(router.currentRoute.value.path.replace('/', '').toLowerCase())
         const tabs = reactive([{
             name: 'HOME',
             key: 'home'
         },
         {
             name: 'PRODUCT',
-            key: ''
+            key: 'product'
         },
         {
             name: 'ABOUT US',
-            key: ''
+            key: 'about'
         },
         {
             name: 'NEWS',
-            key: ''
+            key: 'news'
         }, {
             name: 'CONTACT US',
-            key: ''
+            key: 'contact'
         }])
         let searchContent = ref('')
-        const onSearch = ()=>{
+        const onSearch = () => {
             console.log("???")
         }
         const onNav = (nav) => {
-            ctx.emit('navChang',nav.key)
+            activeKey.value = nav.key
+ 
+            window.scrollTo(0,0)
+            router.push('/' + activeKey.value)
         }
+        let tabStyle = ref('')
+        onMounted(() => {
+            window.addEventListener('scroll', () => {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+                tabStyle.value = scrollTop > 100 ? 'max-width:unset;left:0' : ''
+            })
+        })
         return {
             tabs,
             searchContent,
             Search,
             onSearch,
-            onNav
+            onNav,
+            tabStyle,
+            activeKey
         }
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .tab-bar {
-    *{
-        font-family: 'TrajanPro-Regular',Arial;
+    * {
+        font-family: 'TrajanPro-Regular', Arial;
     }
-    position:sticky;
-    z-index: 999;
+
+    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    transform: translate3d(0, 0, 0);
+
+    position:fixed;
     top: 0;
+    // left: 0;
+    max-width:1920px;
+    min-width: 1200px;
+    z-index: 999;
     padding: 0 100px;
     width: 100%;
     height: 67px;
@@ -97,6 +120,48 @@ export default {
             cursor: pointer;
             font-weight: bolder;
             font-size: 14px;
+            line-height: 50px;
+            position: relative;
+            width: 170px;
+            display: flex;
+            justify-content: center;
+
+            &:hover::after {
+                content: '';
+                display: inline-block;
+                width: 40%;
+                height: 1px;
+                background-color: #fff;
+                position: absolute;
+                bottom: 8px;
+                display: flex;
+                justify-content: center;
+                animation: mymove .1s linear forwards;
+            }
+        }
+
+        .active {
+            &::after {
+                content: '';
+                display: inline-block;
+                width: 40%;
+                height: 1px;
+                background-color: #fff;
+                position: absolute;
+                bottom: 8px;
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+
+    @keyframes mymove {
+        from {
+            width: 0px;
+        }
+
+        to {
+            width: 50%;
         }
     }
 
@@ -114,5 +179,4 @@ export default {
             width: 220px;
         }
     }
-}
-</style>
+}</style>
