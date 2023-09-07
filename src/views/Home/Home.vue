@@ -48,11 +48,11 @@ export default {
         let carouselBox = ref(null)
         let carouselHeight = ref('400px')
         let carouselList = reactive([{
-            imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
+            imageUrl: 'https://img-va.myshopline.com/image/store/2001134635/1655137411465/d6d28aec907d4c01aea67761aedcd688_1728x.jpeg?w=1920&h=750',
             url: 'https://www.baidu.com/'
         },
         {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
+            imageUrl: 'https://img-va.myshopline.com/image/store/2001134635/1655137411465/d6d28aec907d4c01aea67761aedcd688_1728x.jpeg?w=1920&h=750',
             url: 'https://www.baidu.com/'
         }
         ])
@@ -67,7 +67,7 @@ export default {
 
         })
         const jumpPage = (item) => {
-            //window.open(item.url)
+            window.open(item.url)
         }
 
         let deptDesc = ref('')
