@@ -1,1 +1,1 @@
-export const BASR_URL = process.env.NODE_ENV == 'production'?'':'/dev'
+export const BASR_URL = process.env.NODE_ENV == 'production'?'/api':'/dev'
