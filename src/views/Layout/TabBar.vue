@@ -20,14 +20,14 @@
 </template>
 <script>
 import { Search } from "@element-plus/icons-vue";
-import { ref, onMounted, onUnmounted, reactive } from 'vue'
+import { ref, onMounted, onUnmounted, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 export default {
     name: 'TabBar',
     components: { Search },
     setup(props, ctx) {
         const router = new useRouter()
-        const activeKey = ref(router.currentRoute.value.path.replace('/', '').toLowerCase())
+        const activeKey = ref(router.currentRoute.value.path.replace('/', '').toLowerCase() || 'home')
         const tabs = reactive([{
             name: 'HOME',
             key: 'home'
@@ -53,17 +53,25 @@ export default {
         }
         const onNav = (nav) => {
             activeKey.value = nav.key
- 
-            window.scrollTo(0,0)
+
+            window.scrollTo(0, 0)
             router.push('/' + activeKey.value)
         }
         let tabStyle = ref('')
         onMounted(() => {
             window.addEventListener('scroll', () => {
-                let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+                let scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
                 tabStyle.value = scrollTop > 100 ? 'max-width:unset;left:0' : ''
             })
         })
+        watch(
+            () => router.currentRoute.value,
+            (newValue) => {
+                activeKey.value = router.currentRoute.value.path.replace('/', '').toLowerCase()
+                document.documentElement.scrollTop = 0
+            },
+            { immediate: true }
+        )
         return {
             tabs,
             searchContent,
@@ -179,4 +187,5 @@ export default {
             width: 220px;
         }
     }
-}</style>
+}
+</style>

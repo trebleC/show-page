@@ -7,7 +7,7 @@
                     <div class="content">
                         <div class="pro" v-for="(item, index) in cateList" :key="'cate_' + index"
                             @click="onSelectMenu(item)">
-                            {{ item.name }}</div>
+                            {{ item.categoryName }}</div>
                     </div>
                 </div>
                 <div class="pro-menu hot">
@@ -31,7 +31,7 @@
                         <img :src="item.imageUrl" class="img" alt="">
                         <div class="title">{{ item.name }}</div>
                         <div style="text-align: center;">
-                            <div class="btn-show" @click="jumpPage(item.id)">View More</div>
+                            <div class="btn-show" @click="jumpPage(item.goodId)">View More</div>
                         </div>
 
                     </div>
@@ -41,13 +41,13 @@
                         <div class="btn btn-pre" :style="pageNo == 1 ? 'cursor:not-allowed' : ''"
                             @click="onPageChange(pageNo - 1)">{{ '<<' }}</div>
 
-                                <div :class="['btn', 'btn-page', item == pageNo ? 'btn-active' : '']" v-for="(item) in total"
-                                    @click="onPageChange(item)">{{ item }}</div>
+                                <div :class="['btn', 'btn-page', item == pageNo ? 'btn-active' : '']"
+                                    v-for="(item) in total" @click="onPageChange(item)">{{ item }}</div>
                                 <div class="btn btn-pre" :style="pageNo == total ? 'cursor:not-allowed' : ''"
                                     @click="onPageChange(pageNo + 1)">{{ '>>' }}</div>
 
-                                PAGE:<input v-model="pageNum" />
-                                <div class="btn btn-go" @click="onPageChange(pageNum)">GO</div>
+                                PAGE:<input v-model="pageSize" />
+                                <div class="btn btn-go" @click="onPageChange(pageSize)">GO</div>
                         </div>
                     </div>
                 </div>
@@ -55,9 +55,12 @@
 
 
             </div>
+
         </div>
+ 
 </template>
 <script>
+import { queryCategoryMap,queryGoodList } from '@/api/common'
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from "vue-router";
 export default {
@@ -72,94 +75,92 @@ export default {
     },
     setup(props, ctx) {
         const router = new useRouter()
-        let cateList = reactive([])
-        let hotList = reactive([])
-        let activeId = ref(router.currentRoute.value.query.categoryId)
+        let cateList = ref([])
+        let hotList = ref([])
+        let activeId = ref(router.currentRoute.value.query.categoryId || null)
+        
+        const getList = () => {
+            queryGoodList({categoryId:activeId.value,pageNo:pageNo.value,pageSize:pageSize.value}).then(res => {
+                productList.value = res.data
+            })
+        }
+
+        queryCategoryMap().then(res => {
+            cateList.value = res.data
+            cateList.value.push({categoryId:'',categoryName:'其他'})
+        })
+
+
 
         const pageNo = ref(1)
         const total = ref(3)
-        const pageNum = ref(1)
-        let pageSize = 16
+        const pageSize = ref(1)
+
 
         const activeName = computed(() => {
-            cateList.map(item => {
-                if (item.id == activeId.value) {
-                    name = item.name
+            cateList.value.map(item => {
+                if (item.categoryId == activeId.value) {
+                    name = item.categoryName
                 }
             })
             return name
         })
+        getList()
 
-        const jumpPage = () => {
-            console.log("???")
-            router.push('/detail/12')
+        const jumpPage = (goodId) => {
+            router.push('/detail/'+goodId)
         }
 
-        cateList = [
-            {
-                id: 1001,
-                name: 'China Lace',
-            },
-            {
-                id: 22,
-                name: 'Franch Lace',
-            },
-            {
-                id: 23,
-                name: 'Fashion Lace Show',
-            },
-            {
-                id: 24,
-                name: 'Franch Lace XXXFranch Lace XXX',
-            }
-        ]
-        hotList = [
-            {
-                imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-                url: 'https://www.baidu.com/',
-                name: 'Heavy beaded'
-            },
-            {
-                imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-                url: 'https://www.baidu.com/',
-                name: 'Heavy beaded'
-            },
-            {
-                imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-                url: 'https://www.baidu.com/',
-                name: 'Heavy beaded'
-            }, {
-                imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-                url: 'https://www.baidu.com/',
-                name: 'Heavy beaded '
-            }
-        ]
 
-        let productList = reactive([])
-        productList = [
-            {
-                imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-                url: 'https://www.baidu.com/',
-                name: 'Heavy beaded'
-            },
-            {
-                imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-                url: 'https://www.baidu.com/',
-                name: 'Heavy beaded'
-            },
-            {
-                imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-                url: 'https://www.baidu.com/',
-                name: 'Heavy beaded'
-            }, {
-                imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-                url: 'https://www.baidu.com/',
-                name: 'Heavy beaded '
-            }
-        ]
+        // hotList.value =[
+        //     {
+        //         imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
+        //         url: 'https://www.baidu.com/',
+        //         name: 'Heavy beaded'
+        //     },
+        //     {
+        //         imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
+        //         url: 'https://www.baidu.com/',
+        //         name: 'Heavy beaded'
+        //     },
+        //     {
+        //         imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
+        //         url: 'https://www.baidu.com/',
+        //         name: 'Heavy beaded'
+        //     }, {
+        //         imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
+        //         url: 'https://www.baidu.com/',
+        //         name: 'Heavy beaded '
+        //     }
+        // ]
+
+        let productList = ref([])
+        // productList.value = [
+        //     {
+        //         imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
+        //         url: 'https://www.baidu.com/',
+        //         name: 'Heavy beaded'
+        //     },
+        //     {
+        //         imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
+        //         url: 'https://www.baidu.com/',
+        //         name: 'Heavy beaded'
+        //     },
+        //     {
+        //         imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
+        //         url: 'https://www.baidu.com/',
+        //         name: 'Heavy beaded'
+        //     }, {
+        //         imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
+        //         url: 'https://www.baidu.com/',
+        //         name: 'Heavy beaded '
+        //     }
+        // ]
 
         const onSelectMenu = (item) => {
-            activeId.value = item.id
+            activeId.value = item.categoryId
+            getList()
+
         }
         const onPageChange = (page) => {
             if (page <= total.value && page > 0) {
@@ -168,9 +169,7 @@ export default {
             }
 
         }
-        const getList = () => {
-
-        }
+ 
         return {
             cateList,
             hotList,
@@ -180,7 +179,7 @@ export default {
             jumpPage,
             onSelectMenu,
             pageNo,
-            pageNum,
+            pageSize,
             onPageChange,
             total
         }
@@ -458,4 +457,5 @@ export default {
 
 
     }
-}</style>
+}
+</style>

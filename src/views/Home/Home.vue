@@ -12,7 +12,7 @@
             <div class="dept-name">GUANGZHOU VITAS LACE CO.,LTD</div>
             <div class="dept-desc-box">
                 <div class="dept-desc" v-html="deptDesc"></div>
-                <div class="btn-more">READ MORE</div>
+                <div class="btn-more" @click="showCmpMore">READ MORE</div>
             </div>
         </div>
         <div class="content-box">
@@ -39,10 +39,12 @@ import { ElCarousel, ElCarouselItem } from 'element-plus'
 import HotList from '@/views/Home/HotList'
 import News from '@/views/Home/News'
 import FeatList from '@/views/Home/FeatList'
+import { useRouter } from 'vue-router'
 export default {
     name: 'PostList',
-    components: { ElCarousel, ElCarouselItem, HotList,News,FeatList },
+    components: { ElCarousel, ElCarouselItem, HotList, News, FeatList },
     setup(props, ctx) {
+        const router = new useRouter()
         let carouselBox = ref(null)
         let carouselHeight = ref('400px')
         let carouselList = reactive([{
@@ -55,12 +57,12 @@ export default {
         }
         ])
         onMounted(() => {
-            
-        
-            if(carouselBox && carouselBox.value ){
+
+
+            if (carouselBox && carouselBox.value) {
                 carouselHeight.value = parseInt(6 * carouselBox.value.offsetWidth / 16) + 'px'
             }
-   
+
 
 
         })
@@ -73,12 +75,20 @@ export default {
 With a wide variety of products and good after-sales service, our products sell well in domestic and intermational market,such as Europe, USA, the Middle East and other countries.\n
 
 We have our own design teams which master in embroidery.With more than 40pcs lace producing machines and strict process quality control,our quality and delivery time could be assured well.We pursue the tenet of "Quality fitst,Service is supreme.We sincerely welcome customers from all over the world to contact us for future business relationships and achieve mutual success!`
+
+
+
+        const showCmpMore = () => {
+            router.push('/about')
+        }
+
         return {
             carouselBox,
             carouselHeight,
             carouselList,
             jumpPage,
-            deptDesc
+            deptDesc,
+            showCmpMore
         }
     }
 }

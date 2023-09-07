@@ -20,7 +20,7 @@
                     <el-input v-model="form.phone" placeholder="Phone Number" />
                 </el-form-item>
                 <el-form-item size="large">
-                    <el-input v-model="form.comment" type="textarea" :rows="5" placeholder="Comment" />
+                    <el-input v-model="form.desc" type="textarea" :rows="5" placeholder="Comment" />
                 </el-form-item>
                 <el-form-item size="large">
                     <el-button type="primary" @click="onSubmit(ruleFormRef)">Send Message</el-button>
@@ -33,33 +33,13 @@
     
 <script>
 import { ref, reactive, onMounted } from 'vue'
+import { saveDemand } from '@/api/common'
+import { ElMessage } from 'element-plus'
 
 export default {
     name: 'NewsList',
     components: {},
     setup() {
-        let news = reactive([{
-            name: 'ashion brand to open up social media marketing just out of fear and obsession',
-            imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-            url: 'https://www.baidu.com/',
-            desc: 'XX advertising is still leading the fashion luxury brand and retail site traffic and affect the consumer to buy the standard, but the major brands have also opened up a variety of feasible advertising channels such as social networks. XX according to its reported second quarter revenue of 2.91 billion US dollars, the main source is advertising, followed by XX, XX, XX, and XX also followed. Social media for the time being no t',
-            pubDate: '2022-08-08'
-        },
-        {
-            name: 'ashion brand to open up social media marketing just out of fear and obsession',
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            desc: 'XX advertising is still leading the fashion luxury brand and retail site traffic and affect the consumer to buy the standard, but the major brands have also opened up a variety of feasible advertising channels such as social networks. XX according to its reported second quarter revenue of 2.91 billion US dollars, the main source is advertising, followed by XX, XX, XX, and XX also followed. Social media for the time being no t',
-            pubDate: '2022-08-08'
-        },
-        {
-            name: 'ashion brand to open up social media marketing just out of fear and obsession',
-            // imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            desc: 'XX advertising is still leading the fashion luxury brand and retail site traffic and affect the consumer to buy the standard, but the major brands have also opened up a variety of feasible advertising channels such as social networks. XX according to its reported second quarter revenue of 2.91 billion US dollars, the main source is advertising, followed by XX, XX, XX, and XX also followed. Social media for the time being no t',
-            pubDate: '2022-08-08'
-        }
-        ])
 
         const jumpPage = (item) => {
             //window.open(item.url)
@@ -69,7 +49,7 @@ export default {
             name: '',
             email: '',
             phone: '',
-            comment: ''
+            desc: ''
         })
         const rules = reactive({
             name: [{ required: true }],
@@ -89,13 +69,18 @@ export default {
             if (!formEl) return
             let valid = await formEl.validate().catch((err) => { return false })
             if (valid) {
-
+                saveDemand(form).then(res => {
+                    ElMessage({
+                        showClose: true,
+                        message: '恭喜你，这是一条成功消息',
+                        type: 'success'
+                    });
+                })
             }
 
         }
 
         return {
-            news,
             jumpPage,
             form,
             rules,

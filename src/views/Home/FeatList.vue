@@ -5,7 +5,7 @@
                 <img :src="item.imageUrl" class="feat-img img" alt="" srcset="">
                 <div class="mask">
                     <div class="content">
-                        <div class="name">{{ item.name }}</div>
+                        <div class="name">{{ item.categoryName }}</div>
                         <div class="btn-click" @click="jumpPage(item)">VIEW MORE</div>
                     </div>
 
@@ -17,35 +17,30 @@
 </template>
     
 <script>
+import {queryCategoryList} from '@/api/common'
 import { ref, reactive, onMounted, computed } from 'vue'
+import {BASR_URL} from '@/config'
 import ImageShow from '@/components/ImageShow.vue'
+import { useRouter } from 'vue-router'
 export default {
     name: 'FeatList',
     components: { ImageShow },
     setup(props, ctx) {
-        let cardList = reactive([{
-            imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-            url: 'https://www.baidu.com/',
-            name: 'Heavy beaded'
-        },
-        {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            name: 'Heavy beaded'
-        },
-        {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            name: 'Heavy beaded'
-        }, {
-            imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-            url: 'https://www.baidu.com/',
-            name: 'Heavy beaded '
-        }
-        ])
-
+        const router = new useRouter()
+        let cardList = ref([])
+        queryCategoryList().then(res => {
+            cardList.value = res.data.map(item => {
+                if(item.attachments && item.attachments.length>0){
+                    item.imageUrl = BASR_URL + item.attachments[0].url
+                   
+                }
+                return item
+            })
+            cardList.value = cardList.value.slice(0,4)
+            
+        })
         const jumpPage = (item) => {
-            //window.open(item.url)
+            router.push('/product?categoryId='+item.categoryId)
         }
 
         onMounted(() => {
