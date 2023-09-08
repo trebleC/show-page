@@ -48,11 +48,11 @@ export default {
         let carouselBox = ref(null)
         let carouselHeight = ref('400px')
         let carouselList = reactive([{
-            imageUrl: 'https://img-va.myshopline.com/image/store/2001134635/1655137411465/d6d28aec907d4c01aea67761aedcd688_1728x.jpeg?w=1920&h=750',
+            imageUrl: '/upload/banner.png',
             url: 'https://www.baidu.com/'
         },
         {
-            imageUrl: 'https://img-va.myshopline.com/image/store/2001134635/1655137411465/d6d28aec907d4c01aea67761aedcd688_1728x.jpeg?w=1920&h=750',
+            imageUrl: '/upload/banner.png',
             url: 'https://www.baidu.com/'
         }
         ])
