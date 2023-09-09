@@ -54,7 +54,7 @@
         </div>
 
     </div>
-    <div class="desc">All rights reserved： guangzhou galaxy textile co.,ltd</div>
+    <div class="desc">All rights reserved： GUANGZHOU QIQI TEXTILE CO.,LTD </div>
 </template>
 <script>
 import { reactive, ref } from 'vue'

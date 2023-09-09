@@ -4,7 +4,7 @@
     </div>
     <div class="news-wrapper">
 
-        <div style="width: 100%;">
+        <div style="flex:1;">
 
             <div class="title">Get in touch</div>
             <el-form :model="form" :rules="rules" ref="ruleFormRef">
@@ -27,6 +27,12 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="good-box" v-if="dataInfo">
+            <img :src="dataInfo.imageUrl" alt="" srcset="">
+            <div class="name">{{ dataInfo.name }}</div>
+            <div class="desc" v-if="dataInfo.goodNo">Item No.:{{ dataInfo.goodNo }}</div>
+            <div class="desc">{{ dataInfo.desc }}</div>
+        </div>
 
     </div>
 </template>
@@ -35,14 +41,24 @@
 import { ref, reactive, onMounted } from 'vue'
 import { saveDemand } from '@/api/common'
 import { ElMessage } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router'
+import { queryGood } from '@/api/common'
+import { BASR_URL } from '@/config';
 
 export default {
     name: 'NewsList',
     components: {},
     setup() {
-
-        const jumpPage = (item) => {
-            //window.open(item.url)
+        const route =  new useRoute()
+        const router =  new useRouter()
+        const goodId = route.query.goodId
+        let dataInfo = ref(null)
+        if(goodId){
+            queryGood({goodId}).then(res => {
+                let alist = res.data.attachments
+                res.data.imageUrl =  alist.length?BASR_URL+alist[0].url:''
+                dataInfo.value = res.data
+            })
         }
         const ruleFormRef = ref(null)
         const form = reactive({
@@ -66,26 +82,34 @@ export default {
             // }],
         })
         const onSubmit = async (formEl) => {
+            
             if (!formEl) return
             let valid = await formEl.validate().catch((err) => { return false })
             if (valid) {
+                if(goodId){
+                    form.goodId = goodId
+                }
                 saveDemand(form).then(res => {
                     ElMessage({
                         showClose: true,
-                        message: '恭喜你，这是一条成功消息',
+                        message: 'Submit Successfully',
                         type: 'success'
                     });
+                    setTimeout(()=>{
+                        router.push('/')
+                      
+                    },500)
                 })
             }
 
         }
 
         return {
-            jumpPage,
             form,
             rules,
             onSubmit,
-            ruleFormRef
+            ruleFormRef,
+            dataInfo
 
         }
     }
@@ -129,16 +153,13 @@ export default {
 }
 
 .news-wrapper {
-    * {
-        font-family: 'TrajanPro-Regular', Arial;
-    }
-
 
     .title {
         padding: 40px 0;
         box-sizing: border-box;
         font-size: 20px;
         font-weight: bold;
+        font-family: 'TrajanPro-Regular', Arial;
     }
 
     display: block;
@@ -170,4 +191,22 @@ export default {
             background-color: #000;
         }
     }
-}</style>
+}
+.good-box{
+    margin-top: 80px;
+    width: 40%;
+    padding-left: 40px;
+    img{
+        width: 100%;
+        height: 222px;
+        object-fit: contain;
+    }
+    .name{
+        font-weight: bold;
+    }
+    .desc{
+        margin-top: 10px;
+        color: #999;
+    }
+}
+</style>

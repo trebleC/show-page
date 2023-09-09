@@ -7,7 +7,7 @@
 </template>
     
 <script>
-import { ref, reactive, onMounted,computed } from 'vue'
+import { ref, reactive, onMounted,computed,watch } from 'vue'
 
 export default {
     name: 'PageMng',
@@ -21,7 +21,10 @@ export default {
             //window.open(item.url)
         }
 
-        let paginationCount = ref(props.count)
+        let paginationCount = computed(()=>{
+            return props.count
+        })
+        // ref()
         const onChangePage = (index)=>{
             pageNo.value = index
             ctx.emit('onChangePage',index)

@@ -18,6 +18,12 @@ export const queryGoodList = (params)=>{
         params
     })
 }
+export const queryGood = (params)=>{
+    return request({
+        url:'/queryGood',
+        params
+    })
+}
 
 
 export const saveDemand = (data)=>{
@@ -25,5 +31,25 @@ export const saveDemand = (data)=>{
         url:'/saveDemand',
         method:'POST',
         data
+    })
+}
+
+
+export const queryNewsList = ()=>{
+    return request({
+        url:'/queryNewsList',
+    })
+}
+export const newsDetail = (params)=>{
+    return request({
+        url:'/newsDetail',
+        params
+    })
+}
+
+export const queryHotGoodList = (params) =>{
+    return request({
+        url:'/queryHotGoodList',
+        params
     })
 }

@@ -16,7 +16,7 @@
         <!-- 遮罩色块 -->
         <div v-show="show" class="layer" :style="layerPosition"></div>
       </div>
-      
+      <!-- <div style="position: absolute;">{{ largePosition }}{{ images[currIndex] }}</div> -->
     </div>
   </template>
    
@@ -33,7 +33,7 @@
     },
     setup (props) {
       const currIndex = ref(0)
-   
+      
       // 1. 是否显示遮罩和大图
       const show = ref(false)
    
@@ -58,13 +58,13 @@
         show.value = !isOutside.value
         const position = { X: 0, Y: 0 }
    
-        if (elementX.value < 100) position.X = 0
-        else if (elementX.value > 300) position.X = 200
-        else position.X = elementX.value - 100
+        if (elementX.value < 50) position.X = 0
+        else if (elementX.value > 400) position.X = 350
+        else position.X = elementX.value - 50
    
-        if (elementY.value < 100) position.Y = 0
-        else if (elementY.value > 300) position.Y = 200
-        else position.Y = elementY.value - 100
+        if (elementY.value < 50) position.Y = 0
+        else if (elementY.value > 400) position.Y = 350
+        else position.Y = elementY.value - 50
    
         layerPosition.left = position.X + 'px'
         layerPosition.top = position.Y + 'px'
@@ -91,26 +91,27 @@
     .large {
       position: absolute;
       top: 0;
-      left: 490px;
-      width: 400px;
-      height: 400px;
+      left: 535px;
+      width: 500px;
+      height: 500px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       background-repeat: no-repeat;
-      background-size: 800px 800px;
+      background-size: 1200px 1200px;
       background-color: #f8f8f8;
     }
     .middle {
-      width: 400px;
-      height: 400px;
+      width: 450px;
+      height: 450px;
       background: #f5f5f5;
       position: relative;
       cursor: move;
       img{
-        object-fit:cover;
+        // object-fit:cover;
+        object-fit:fill;
       }
       .layer {
-        width: 200px;
-        height: 200px;
+        width: 100px;
+        height: 100px;
         background: rgba(0,0,0,.2);
         left: 0;
         top: 0;

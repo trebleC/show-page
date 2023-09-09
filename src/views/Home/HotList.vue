@@ -1,8 +1,8 @@
 <template>
     <div class="hot-list">
-        <div class="list" :style="{width:cardListWidth}" ref="hostlist">
-            <div class="card" v-for="(item, index) in cardList" :key="'card' + index">
-                <ImageShow class="card-img" contain :path="item.imageUrl" alt="" srcset="" @click="jumpPage(item)" />
+        <div class="list" :style="{ width: cardListWidth }" ref="hostlist">
+            <div class="card" v-for="(item, index) in cardList" :key="'card' + index" @click="jumpPage(item)">
+                <ImageShow class="card-img" contain :path="item.imageUrl" alt="" srcset="" />
                 <div class="name">{{ item.name }}</div>
             </div>
         </div>
@@ -11,65 +11,49 @@
 </template>
     
 <script>
-import { ref, reactive, onMounted,computed } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { queryHotGoodList } from '@/api/common'
 import PageMng from '@/components/PageMng.vue'
 import ImageShow from '@/components/ImageShow.vue'
+import { BASR_URL } from "@/config";
+import { useRouter } from 'vue-router';
+
 export default {
     name: 'PostList',
-    components:{PageMng,ImageShow},
+    components: { PageMng, ImageShow },
     setup(props, ctx) {
+        const router = new useRouter()
         let pageNo = ref(0)
-        let cardList = reactive([{
-            imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-            url: 'https://www.baidu.com/',
-            name:'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },
-        {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            name:'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },
-        {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            name:'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },{
-            imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-            url: 'https://www.baidu.com/',
-            name:'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },
-        {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            name:'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },
-        {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            name:'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        }
-        ])
+        let cardList = ref([])
 
+        let paginationCount = ref(0)
         const jumpPage = (item) => {
-            //window.open(item.url)
+            router.push('/detail/' + item.goodId)
         }
         const cardListWidth = ref('100%')
-        onMounted(()=>{
-            cardListWidth.value = (cardList.length * 477) + 'px'
+        onMounted(() => {
+            queryHotGoodList().then(res => {
+                cardList.value = res.data.map(item => {
+                    item.imageUrl = item.attachments.length ? BASR_URL + item.attachments[0].url : ''
+                    return item
+                })
+                cardListWidth.value = (cardList.value.length * 477) + 'px'
+                paginationCount.value = Math.floor(cardList.value.length / 2)
+            })
+
+
+
         })
-     
-        let paginationCount = computed(()=>{
-            return Math.floor(cardList.length/3)
-        })
-        const onChangePage = (index)=>{
+       
+        const onChangePage = (index) => {
             pageNo.value = index
             hostlist.value.style.transitionDuration = `0.5s`
-            hostlist.value.style.transform = `translate3d(-${index*1300}px, 0,0)`
+            hostlist.value.style.transform = `translate3d(-${index * 1300}px, 0,0)`
         }
         let hostlist = ref(null)
-  
-   
-        
+
+
+
         return {
             cardList,
             jumpPage,
@@ -86,16 +70,17 @@ export default {
 <style lang="less" scoped>
 .hot-list {
     width: 100%;
-    overflow-x:hidden; //隐藏水平滚动条
+    overflow-x: hidden; //隐藏水平滚动条
     transition-duration: 0.5s;
     position: relative;
+
     .list {
         padding: 0 40px;
         box-sizing: border-box;
         height: auto;
 
-        &::after{
-            content:'';
+        &::after {
+            content: '';
             width: 0;
             height: 0;
             display: table;

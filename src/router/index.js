@@ -21,6 +21,10 @@ const routes = [
         component:()=>import('@/views/News/News')
       },
       {
+        path:'/newsDetail',
+        component:()=>import('@/views/News/NewsDetail')
+      },
+      {
         path:'/contact',
         component:()=>import('@/views/Contact/Contact')
       },
@@ -29,7 +33,7 @@ const routes = [
         component:()=>import('@/views/About/About')
       },
       {
-        path:'/detail/:id',
+        path:'/detail/:goodId',
         component:()=>import('@/views/Product/Detail')
       }
     ]
@@ -48,7 +52,7 @@ const router = createRouter({
 
 // router.beforeEach((to, from) => {
 //   // ...
-//   // 返回 false 以取消导航
+//   // 返回 false 以取消
  
 //   let path = to.path.replace(/[\/0-9]/g,'')
 //   // console.log('path',path,to);

@@ -95,7 +95,6 @@ export default {
 
         let songList = ref([])
         getSongList().then(res => {
-            console.log(res)
             songList.value = res.data
         })
 

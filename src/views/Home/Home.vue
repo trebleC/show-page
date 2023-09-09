@@ -1,5 +1,6 @@
 <template>
     <div class="home">
+        
         <div class="carousel-box" ref="carouselBox">
             <el-carousel trigger="click" :height="carouselHeight">
                 <el-carousel-item v-for="item in carouselList" :key="item">
@@ -9,7 +10,7 @@
         </div>
 
         <div class="dept">
-            <div class="dept-name">GUANGZHOU VITAS LACE CO.,LTD</div>
+            <div class="dept-name">GUANGZHOU QIQI TEXTILE CO.,LTD </div>
             <div class="dept-desc-box">
                 <div class="dept-desc" v-html="deptDesc"></div>
                 <div class="btn-more" @click="showCmpMore">READ MORE</div>
@@ -40,6 +41,7 @@ import HotList from '@/views/Home/HotList'
 import News from '@/views/Home/News'
 import FeatList from '@/views/Home/FeatList'
 import { useRouter } from 'vue-router'
+import { BASR_URL } from "@/config";
 export default {
     name: 'PostList',
     components: { ElCarousel, ElCarouselItem, HotList, News, FeatList },
@@ -48,11 +50,11 @@ export default {
         let carouselBox = ref(null)
         let carouselHeight = ref('400px')
         let carouselList = reactive([{
-            imageUrl: '/upload/banner.png',
+            imageUrl: BASR_URL+'/upload/banner.png',
             url: 'https://www.baidu.com/'
         },
         {
-            imageUrl: '/upload/banner.png',
+            imageUrl: BASR_URL+ '/upload/banner2.png',
             url: 'https://www.baidu.com/'
         }
         ])
@@ -71,7 +73,7 @@ export default {
         }
 
         let deptDesc = ref('')
-        deptDesc.value = `Established in 2015,GUANGZHOU VITAS LACE CO.,LTD., is a comprehensive enterprise integrating R&D, design, production and sale. Specialized in wedding dress fabric, we are fully commited to producing high-quality wedding fabric which involved in wedding dress, fashion, home textiles and other fields.\n
+        deptDesc.value = `GUANGZHOU QIQI TEXTILE CO.,LTD, is a comprehensive enterprise integrating R&D, design, production and sale. Specialized in wedding dress fabric, we are fully commited to producing high-quality wedding fabric which involved in wedding dress, fashion, home textiles and other fields.\n
 With a wide variety of products and good after-sales service, our products sell well in domestic and intermational market,such as Europe, USA, the Middle East and other countries.\n
 
 We have our own design teams which master in embroidery.With more than 40pcs lace producing machines and strict process quality control,our quality and delivery time could be assured well.We pursue the tenet of "Quality fitst,Service is supreme.We sincerely welcome customers from all over the world to contact us for future business relationships and achieve mutual success!`

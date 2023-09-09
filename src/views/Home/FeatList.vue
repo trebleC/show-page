@@ -84,6 +84,9 @@ export default {
                 transition-duration: 0.5s;
                 transform: scale(1.05);
             }
+            .name{
+                background-color: rgba(0, 0, 0, 0.1);
+            }
         }
         .feat-img {
             width: 100%;
@@ -120,6 +123,9 @@ export default {
             color: #fff;
             font-weight: bold;
             font-family: 'TrajanPro-Regular', Arial;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .btn-click {

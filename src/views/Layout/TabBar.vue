@@ -2,9 +2,9 @@
     <div :class="['tab-bar']" :style="[tabStyle]">
         <div class="tabs">
             <img class="logo" src="../../assets/logo.png" alt="" srcset="">
-            <div :class="['tab', { active: activeKey == item.key }]" v-for="(item, index) in tabs" :key="index"
+            <div :class="['tab', { active: isActive(item.key) }]" v-for="(item, index) in tabs" :key="index"
                 @click="onNav(item)">{{ item.name }}</div>
-            <div class="options">
+            <div class="options" v-if="activeKey == 'home'">
 
                 <el-input v-model="searchContent" class="input-box" size="large" placeholder="SEARCH KEYWORD">
                     <template #suffix>
@@ -20,12 +20,14 @@
 </template>
 <script>
 import { Search } from "@element-plus/icons-vue";
-import { ref, onMounted, onUnmounted, reactive, watch } from 'vue'
+import { ref, onMounted, onUnmounted, reactive, watch,nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import {useStore} from "vuex"
 export default {
     name: 'TabBar',
     components: { Search },
     setup(props, ctx) {
+        const store = useStore();
         const router = new useRouter()
         const activeKey = ref(router.currentRoute.value.path.replace('/', '').toLowerCase() || 'home')
         const tabs = reactive([{
@@ -49,7 +51,11 @@ export default {
         }])
         let searchContent = ref('')
         const onSearch = () => {
-            console.log("???")
+            // store.commit('setName',searchContent.value)
+            if(!searchContent.value)return
+           let name = searchContent.value
+           searchContent.value = ''
+            router.push('/product?name='+name)
         }
         const onNav = (nav) => {
             activeKey.value = nav.key
@@ -61,14 +67,23 @@ export default {
         onMounted(() => {
             window.addEventListener('scroll', () => {
                 let scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-                tabStyle.value = scrollTop > 100 ? 'max-width:unset;left:0' : ''
+                tabStyle.value = document.documentElement.scrollTop > 100 ? 'max-width:unset;left:0' : ''
             })
         })
+        const isActive = (key)=>{
+            return activeKey.value.indexOf(key) >-1
+        }
         watch(
             () => router.currentRoute.value,
-            (newValue) => {
+             async (newValue) => {
+              
                 activeKey.value = router.currentRoute.value.path.replace('/', '').toLowerCase()
-                document.documentElement.scrollTop = 0
+                setTimeout(()=>{
+                    window.scrollTop= 0
+                    document.body.scrollTop=0
+                    document.documentElement.scrollTop = 0
+                },0)
+        
             },
             { immediate: true }
         )
@@ -79,7 +94,8 @@ export default {
             onSearch,
             onNav,
             tabStyle,
-            activeKey
+            activeKey,
+            isActive
         }
     }
 }
@@ -96,8 +112,9 @@ export default {
     position:fixed;
     top: 0;
     // left: 0;
-    max-width:1920px;
+    // max-width:1920px;
     min-width: 1200px;
+    width: 100%;
     z-index: 999;
     padding: 0 100px;
     width: 100%;

@@ -5,17 +5,18 @@
                 <div class="pro-menu">
                     <div class="title">Products</div>
                     <div class="content">
-                        <div class="pro" v-for="(item, index) in cateList" :key="'cate_' + index"
-                            @click="onSelectMenu(item)">
-                            {{ item.categoryName }}</div>
+                        <div :class="['pro', item.categoryId == activeId ? 'pro-active' : '']"
+                            v-for="(item, index) in cateList" :key="'cate_' + index" @click="onSelectMenu(item)">
+                            {{ item.categoryName }}
+                        </div>
                     </div>
                 </div>
                 <div class="pro-menu hot">
                     <div class="title">Hot Products</div>
                     <div class="content">
                         <div class="hots">
-                            <div class="hot-item" v-for="(item, index) in hotList">
-                                <img :src="item.imageUrl" class="img" alt="" srcset="">
+                            <div class="hot-item" v-for="(item, index) in hotList" @click="jumpPage(item.goodId)">
+                                <img :src="item.imageUrl" class="img" alt="" srcset="" />
                                 <div class="pro-name">{{ item.name }}</div>
                             </div>
                         </div>
@@ -23,153 +24,190 @@
                 </div>
             </div>
 
-
             <div class="list-box">
                 <div class="head">{{ activeName }}</div>
-                <div class="list">
-                    <div class="product" v-for="(item, index) in productList" :key="'p' + index">
-                        <img :src="item.imageUrl" class="img" alt="">
-                        <div class="title">{{ item.name }}</div>
-                        <div style="text-align: center;">
-                            <div class="btn-show" @click="jumpPage(item.goodId)">View More</div>
+
+                <el-space direction="vertical" alignment="flex-start">
+                    <el-skeleton style="width: 100%;" class="list" :loading="loading" animated :count="9">
+                        <template #template>
+                            <div class="skeleton-product">
+                           
+                                <el-skeleton-item variant="image" style="width: 100%;height: 70%;"/>
+                                <div style="padding: 14px 0">
+                                    <el-skeleton-item variant="h3" style="width: 50%" />
+                                    <div style="
+                                        display: flex;
+                                        align-items: center;
+                                        justify-items: space-between;
+                                        margin-top: 16px;
+                                        height: 16px;
+                                        ">
+                                        <el-skeleton-item variant="text" style="margin-right: 16px" />
+                                        <el-skeleton-item variant="text" style="width: 30%" />
+                                    </div>
+                                </div>
+                          
                         </div>
 
-                    </div>
-                </div>
-                <div class="pagination-wrapper">
+                        </template>
+                        <template #default>
+                            <div class="list">
+                                <div class="product" v-for="(item, index) in productList" :key="'p' + index">
+                                    <img :src="item.imageUrl" class="img" alt="" />
+                                    <div class="title">{{ item.name }}</div>
+                                    <div style="text-align: center">
+                                        <div class="btn-show" @click="jumpPage(item.goodId)">
+                                            View More
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </el-skeleton>
+                </el-space>
+
+
+                <!-- <div class="pagination-wrapper">
                     <div class="pagination-box">
+
                         <div class="btn btn-pre" :style="pageNo == 1 ? 'cursor:not-allowed' : ''"
-                            @click="onPageChange(pageNo - 1)">{{ '<<' }}</div>
-
-                                <div :class="['btn', 'btn-page', item == pageNo ? 'btn-active' : '']"
-                                    v-for="(item) in total" @click="onPageChange(item)">{{ item }}</div>
-                                <div class="btn btn-pre" :style="pageNo == total ? 'cursor:not-allowed' : ''"
-                                    @click="onPageChange(pageNo + 1)">{{ '>>' }}</div>
-
-                                PAGE:<input v-model="pageSize" />
-                                <div class="btn btn-go" @click="onPageChange(pageSize)">GO</div>
+                            @click="onPageChange(pageNo - 1)">{{ "<<" }}
                         </div>
+
+                        <div :class="['btn', 'btn-page', item == pageNo ? 'btn-active' : '']" v-for="item in total"
+                            @click="onPageChange(item)">
+                            {{ item }}
+                        </div>
+                        <div class="btn btn-pre" :style="pageNo == total ? 'cursor:not-allowed' : ''"
+                            @click="onPageChange(pageNo + 1)">
+                            {{ ">>" }}
+                        </div>
+
+                        PAGE:<input v-model="pageSize" />
+                        <div class="btn btn-go" @click="onPageChange(pageSize)">GO</div>
+
                     </div>
-                </div>
-
-
-
+                </div> -->
             </div>
-
         </div>
- 
+    </div>
 </template>
 <script>
-import { queryCategoryMap,queryGoodList } from '@/api/common'
-import { ref, reactive, onMounted, computed } from 'vue'
+import {
+    queryCategoryMap,
+    queryGoodList,
+    queryHotGoodList,
+} from "@/api/common";
+import { ref, reactive, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import { BASR_URL } from "@/config";
+import { useStore } from "vuex"
 export default {
-    name: 'ProductList',
+    name: "ProductList",
     components: {},
     props: {
         path: String,
         contain: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     setup(props, ctx) {
-        const router = new useRouter()
-        let cateList = ref([])
-        let hotList = ref([])
-        let activeId = ref(router.currentRoute.value.query.categoryId || null)
-        
-        const getList = () => {
-            queryGoodList({categoryId:activeId.value,pageNo:pageNo.value,pageSize:pageSize.value}).then(res => {
-                productList.value = res.data
-            })
-        }
+        const store = useStore();
+        const router = new useRouter();
+        let cateList = ref([]);
+        let hotList = ref([]);
+        const activeName = ref("");
+        const pageNo = ref(1);
+        const total = ref(3);
+        const pageSize = ref(1);
+        let name = router.currentRoute.value.query.name
 
-        queryCategoryMap().then(res => {
-            cateList.value = res.data
-            cateList.value.push({categoryId:'',categoryName:'其他'})
-        })
+        const loading = ref(true)
 
 
 
-        const pageNo = ref(1)
-        const total = ref(3)
-        const pageSize = ref(1)
-
-
-        const activeName = computed(() => {
-            cateList.value.map(item => {
+        let activeId = ref(router.currentRoute.value.query.categoryId || 'all');
+        const cateNameChange = () => {
+            cateList.value.map((item) => {
                 if (item.categoryId == activeId.value) {
-                    name = item.categoryName
+                    activeName.value = item.categoryName;
+                } else {
+                    activeName.value = "";
                 }
-            })
-            return name
-        })
-        getList()
+            });
+        };
+        const getList = () => {
+            let query = {
+                categoryId: activeId.value == 'all' ? '' : activeId.value,
+                pageNo: pageNo.value,
+                pageSize: pageSize.value,
+            }
+            if (name) {
+                query.name = name
+            }
+            queryGoodList(query).then((res) => {
+                loading.value = false
+                productList.value = res.data.map((item) => {
+                    item.imageUrl = item.attachments.length
+                        ? BASR_URL + item.attachments[0].url
+                        : "";
+                    return item;
+                });
+            });
+        };
+
+        queryCategoryMap().then((res) => {
+            cateList.value = res.data;
+
+            cateList.value.unshift({ categoryId: 'all', categoryName: "All" });
+            cateList.value.push({ categoryId: null, categoryName: "Other" });
+            cateList.value.map((item) => {
+                if (activeId.value == item.categoryId) {
+                    activeName.value = item.categoryName;
+                }
+            });
+            if (!activeName.value && activeName.value != 'all') {
+                activeName.value = cateList.value[0].categoryName;
+                activeId.value = cateList.value[0].categoryId;
+            }
+            getList();
+        });
 
         const jumpPage = (goodId) => {
-            router.push('/detail/'+goodId)
-        }
+            router.push("/detail/" + goodId);
+        };
 
+        queryHotGoodList().then((res) => {
+            hotList.value = res.data.slice(0, 4).map((item) => {
+                item.imageUrl = item.attachments.length
+                    ? BASR_URL + item.attachments[0].url
+                    : "";
+                return item;
+            });
+        });
 
-        // hotList.value =[
-        //     {
-        //         imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-        //         url: 'https://www.baidu.com/',
-        //         name: 'Heavy beaded'
-        //     },
-        //     {
-        //         imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-        //         url: 'https://www.baidu.com/',
-        //         name: 'Heavy beaded'
-        //     },
-        //     {
-        //         imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-        //         url: 'https://www.baidu.com/',
-        //         name: 'Heavy beaded'
-        //     }, {
-        //         imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-        //         url: 'https://www.baidu.com/',
-        //         name: 'Heavy beaded '
-        //     }
-        // ]
-
-        let productList = ref([])
-        // productList.value = [
-        //     {
-        //         imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-        //         url: 'https://www.baidu.com/',
-        //         name: 'Heavy beaded'
-        //     },
-        //     {
-        //         imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-        //         url: 'https://www.baidu.com/',
-        //         name: 'Heavy beaded'
-        //     },
-        //     {
-        //         imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-        //         url: 'https://www.baidu.com/',
-        //         name: 'Heavy beaded'
-        //     }, {
-        //         imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-        //         url: 'https://www.baidu.com/',
-        //         name: 'Heavy beaded '
-        //     }
-        // ]
+        let productList = ref([]);
 
         const onSelectMenu = (item) => {
-            activeId.value = item.categoryId
-            getList()
-
-        }
+            name = ''
+            activeId.value = item.categoryId;
+            activeName.value = item.categoryName;
+            getList();
+        };
         const onPageChange = (page) => {
             if (page <= total.value && page > 0) {
-                pageNo.value = page
-                getList()
+                pageNo.value = page;
+                getList();
             }
+        };
 
-        }
- 
+        watch(() => store.state.name, () => {
+            // console.log('?????',store.state.name);
+            // getList()
+        })
+
+
         return {
             cateList,
             hotList,
@@ -181,10 +219,11 @@ export default {
             pageNo,
             pageSize,
             onPageChange,
-            total
-        }
-    }
-}
+            total,
+            loading
+        };
+    },
+};
 </script>
 <style lang="less" scoped>
 .product-wrapper {
@@ -201,8 +240,6 @@ export default {
 
         display: flex;
         justify-content: space-between;
-
-
     }
 
     .sidebar {
@@ -222,7 +259,7 @@ export default {
                 background: url(~@/assets/cate_title_icon.png) no-repeat center bottom;
                 font-size: 24px;
                 color: #202528;
-                font-family: 'Glosa-Bold';
+                font-family: "Glosa-Bold";
                 text-align: center;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -235,7 +272,7 @@ export default {
                 .pro {
                     font-size: 14px;
                     color: #7a7a7a;
-                    font-family: 'Opensans-Regular';
+                    font-family: "Opensans-Regular";
                     padding: 10px 20px;
                     box-sizing: border-box;
                     cursor: pointer;
@@ -246,13 +283,18 @@ export default {
                     }
 
                     &::before {
-                        content: '';
+                        content: "";
                         width: 4px;
                         height: 7px;
                         background: url(~@/assets/cate_item_icon.png) no-repeat center;
                         display: inline-block;
                         margin-right: 10px;
                     }
+                }
+
+                .pro-active {
+                    background: #f7f7f7;
+                    color: #d4ad6a;
                 }
             }
         }
@@ -273,7 +315,7 @@ export default {
                     cursor: pointer;
 
                     .img {
-                        transition: opacity .6s;
+                        transition: opacity 0.6s;
                         width: 59px;
                         height: 106px;
                         object-fit: cover;
@@ -290,7 +332,7 @@ export default {
 
                     .pro-name {
                         flex: 1;
-                        font-family: 'TrajanPro-Regular', Arial;
+                        font-family: "TrajanPro-Regular", Arial;
                         font-size: 14px;
                         margin-left: 16px;
                     }
@@ -298,16 +340,12 @@ export default {
                     &:hover {
                         .pro-name {
                             color: #d4ad6a;
-                            ;
                         }
                     }
                 }
             }
         }
     }
-
-
-
 
     .list-box {
         width: 900px;
@@ -320,7 +358,7 @@ export default {
             background: #fff;
             font-size: 18px;
             color: #202528;
-            font-family: 'Opensans-Regular';
+            font-family: "Opensans-Regular";
             box-sizing: border-box;
             white-space: nowrap;
             overflow: hidden;
@@ -335,7 +373,7 @@ export default {
 
         .product {
             background: #fff;
-            width: calc(100% / 3 - 40px);
+            width: calc(100% / 3 - 15px);
             margin-right: 20px;
             margin-bottom: 20px;
             overflow: hidden;
@@ -343,7 +381,6 @@ export default {
             &:nth-child(3n) {
                 margin-right: 0;
             }
-
 
             .img {
                 width: 100%;
@@ -361,7 +398,7 @@ export default {
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 2;
                 overflow: hidden;
-                font-family: 'TrajanPro-Regular', Arial;
+                font-family: "TrajanPro-Regular", Arial;
             }
 
             .btn-show {
@@ -375,7 +412,7 @@ export default {
                 border-radius: 20px;
                 transition: all 0.5s;
                 padding: 0 22px;
-                font-family: 'TrajanPro-Regular', Arial;
+                font-family: "TrajanPro-Regular", Arial;
                 margin-bottom: 30px;
                 cursor: pointer;
             }
@@ -385,12 +422,11 @@ export default {
                     background-color: #d4ad6a;
                     border-color: transparent;
                     color: #fff;
-
                 }
 
                 .img {
                     transform: scale(1.05);
-                    transition: all .5s;
+                    transition: all 0.5s;
                 }
             }
         }
@@ -403,7 +439,7 @@ export default {
     }
 
     .pagination-box {
-        font-family: 'TrajanPro-Regular', Arial;
+        font-family: "TrajanPro-Regular", Arial;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -420,8 +456,6 @@ export default {
             text-align: center;
             line-height: 54px;
             cursor: pointer;
-
-
         }
 
         .btn-page {
@@ -446,16 +480,21 @@ export default {
             padding: 0 16px;
             box-sizing: border-box;
             font-size: 18px;
-            font-family: 'TrajanPro-Regular', Arial;
+            font-family: "TrajanPro-Regular", Arial;
         }
 
         .btn-go {
             margin-left: 10px;
             cursor: pointer;
         }
-
-
-
+    }
+}
+.skeleton-product{
+    margin-right: 15px;
+    width: 290px; 
+    height: 267px;
+    &:nth-child(3n){
+        margin-right: 0;
     }
 }
 </style>

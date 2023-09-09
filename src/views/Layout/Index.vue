@@ -31,16 +31,18 @@ export default {
 </script>
 <style lang="less" scoped>
     .layout{
-        max-width: 1920px;
-        min-width: 1200px;
+
         width: 100vw;
         height: 100%;
         background-color: #fff;
         overflow-x: hidden;
        
         .content{
+            max-width: 1920px;
+            min-width: 1200px;
             position: relative;
-            flex:1;
+            margin: 67px auto;
+            // flex:1;
         }
     }
     .tab-bar-margin{

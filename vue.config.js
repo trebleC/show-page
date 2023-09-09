@@ -28,7 +28,7 @@ module.exports = defineConfig({
       config
         .plugin('html')
         .tap(args => {
-          args[0].title = 'shop'
+          args[0].title = 'QIQI TEXTILE'
           return args
         })
     },
@@ -36,15 +36,16 @@ module.exports = defineConfig({
     devServer: {
       proxy: {
         '/dev': {
-          target: 'http://127.0.0.1:7001',
+          // target: 'http://127.0.0.1:7001',
+          target: 'http://tsscs.shop',
           ws: true,
           changeOrigin: true,
           pathRewrite: {
             "^/dev": "",
           },
         },
-        '/song': {
-          target: 'http://localhost:4000',
+        '/upload': {
+          target: 'http://tsscs.shop/dev/upload',
           ws: true,
           changeOrigin: true,
         },

@@ -24,7 +24,7 @@ export default {
     components: {},
     setup() {
         const content = ref('')
-        content.value = `Guangzhou Vitas Lace Co., Ltd. founded in 2015, is an industrial & trade integrated company with solid strength in R&D, designing and customized.
+        content.value = `GUANGZHOU QIQI TEXTILE CO.,LTD , Ltd. founded in 2015, is an industrial & trade integrated company with solid strength in R&D, designing and customized.
 
 Vitas Lace has focused on the high-end embroidery fabric industry for more than 6 years with main products like: embroidery lace, wedding accessories, veil, etc.. Her products have been widely used in high-end wedding dresses, gowns, apparel, home textile and so on. Moreover, her products have been exported to many countries and regions around the world.
 

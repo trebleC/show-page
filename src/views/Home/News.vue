@@ -1,18 +1,18 @@
 <template>
     <div class="news-list">
         <div class="list" :style="{ width: dataListWidth }" ref="newslist">
-                <div class="news" v-for="(item, index) in dataList" :key="'card' + index">
-                <ImageShow  class="event-img" :path="item.imageUrl"  @click="jumpPage(item)" />
-                <div class="txt">
+            <div class="news" v-for="(item, index) in dataList" :key="'card' + index">
+                <ImageShow class="event-img" :path="item.imageUrl" @click="jumpPage(item)" />
+                <div class="txt" @click="jumpPage(item)">
                     <div class="time">
-                        {{formatDate(item.date)}}  
+                        {{ formatDate(item.date) }}
                         <span class="month">/ {{ formatDateMonth(item.date) }}</span>
                     </div>
                     <div class="title">{{ item.name }}</div>
-                    <div class="brief">super executive power</div>
+                    <div class="brief">{{ item.author }}</div>
                 </div>
             </div>
-          
+
 
         </div>
         <PageMng :count="paginationCount" @onChangePage="onChangePage" />
@@ -21,79 +21,63 @@
     
 <script>
 import { ref, reactive, onMounted, computed } from 'vue'
+import {BASR_URL} from '@/config'
+import { queryNewsList } from '@/api/common'
 import PageMng from '@/components/PageMng.vue'
 import ImageShow from '@/components/ImageShow.vue'
 import dayjs from 'dayjs'
+import { useRouter } from 'vue-router'
 
 export default {
     name: 'PostList',
-    components: { PageMng,ImageShow },
+    components: { PageMng, ImageShow },
     setup(props, ctx) {
+        const router = new useRouter()
         let pageNo = ref(0)
-        let dataList = reactive([{
-            imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-            url: 'https://www.baidu.com/',
-            date:1691033871036,
-            name: 'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },
-        {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            date:1691033871036,
-            name: 'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },{
-            imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-            url: 'https://www.baidu.com/',
-            date:1691033871036,
-            name: 'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },
-        {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            date:1691033871036,
-            name: 'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },{
-            imageUrl: 'http://localhost:4000/song/14556-20230727043345.jpg',
-            url: 'https://www.baidu.com/',
-            date:1691033871036,
-            name: 'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },
-        {
-            imageUrl: 'http://localhost:4000/song/14549-20230726065344.jpg',
-            url: 'https://www.baidu.com/',
-            date:1691033871036,
-            name: 'Heavy beaded sequins embroidered for wedding bridal dress embroidery lace fabricVIEW'
-        },
-        ])
+        let dataList = ref([])
+
+
 
         const jumpPage = (item) => {
-            //window.open(item.url)
+            router.push('/newsDetail?newsId='+item.newsId)
         }
         const dataListWidth = ref('100%')
-        
-        onMounted(() => {
-            dataListWidth.value = (dataList.length * 100) + '%'
-        })
 
 
-        let paginationCount = computed(() => {
-            return Math.floor(dataList.length)
-        })
+
+
+        let paginationCount = ref(0)
         const onChangePage = (index) => {
             pageNo.value = index
             newslist.value.style.transitionDuration = `0.5s`
-            newslist.value.style.transform = `translate3d(-${100/dataList.length * index}%, 0,0)`
+            newslist.value.style.transform = `translate3d(-${100 / dataList.value.length * index}%, 0,0)`
         }
         let newslist = ref(null)
-    
+
         const formatDate = (value) => {
             return dayjs(value).format('DD')
         }
-        const formatDateMonth = (value)=>{
+        const formatDateMonth = (value) => {
             return dayjs(value).format('MMM')
         }
 
+        onMounted(() => {
+            queryNewsList().then(res => {
+                dataList.value = res.data.map(item => {
+                    return {
+                        imageUrl: item.attachments.length ? BASR_URL+item.attachments[0].url : '',
+                        url: 'https://www.baidu.com/',
+                        date: item.updateTime,
+                        name: item.title,
+                        newsId: item.newsId,
+                        author: item.author
+                    }
+                })
+                dataListWidth.value = (dataList.value.length * 100) + '%'
+                paginationCount.value = Math.floor(dataList.value.length)
+            })
 
+        })
         return {
             dataList,
             jumpPage,
@@ -119,7 +103,8 @@ export default {
     .list {
         display: flex;
         height: auto;
-        .wrapper{
+
+        .wrapper {
             width: 100%;
             padding: 0 100px;
             box-sizing: border-box;
@@ -133,6 +118,7 @@ export default {
         flex-wrap: nowrap;
         padding: 0 100px;
         box-sizing: border-box;
+
         .event-img {
             width: 370px;
             height: 250px;
@@ -168,13 +154,13 @@ export default {
                 font-size: 14px;
                 color: #666;
             }
-            .month{
-                font-family: 'TrajanPro-Regular',Arial;
+
+            .month {
+                font-family: 'TrajanPro-Regular', Arial;
                 font-size: 14px;
             }
         }
     }
 
 
-}
-</style>
+}</style>
