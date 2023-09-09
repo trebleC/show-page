@@ -497,4 +497,10 @@ export default {
         margin-right: 0;
     }
 }
+/deep/ .el-space{
+    width: 100%;
+}
+/deep/ .el-space__item{
+    width: 100%;
+}
 </style>
