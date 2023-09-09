@@ -27,7 +27,6 @@
             <div class="list-box">
                 <div class="head">{{ activeName }}</div>
 
-                <el-space direction="vertical" alignment="flex-start">
                     <el-skeleton style="width: 100%;" class="list" :loading="loading" animated :count="9">
                         <template #template>
                             <div class="skeleton-product">
@@ -64,7 +63,7 @@
                             </div>
                         </template>
                     </el-skeleton>
-                </el-space>
+            
 
 
                 <!-- <div class="pagination-wrapper">
@@ -190,6 +189,7 @@ export default {
         let productList = ref([]);
 
         const onSelectMenu = (item) => {
+            loading.value = true
             name = ''
             activeId.value = item.categoryId;
             activeName.value = item.categoryName;

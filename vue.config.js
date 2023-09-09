@@ -36,8 +36,8 @@ module.exports = defineConfig({
     devServer: {
       proxy: {
         '/dev': {
-          // target: 'http://127.0.0.1:7001',
-          target: 'http://tsscs.shop',
+          target: 'http://127.0.0.1:7001',
+          // target: 'http://tsscs.shop',
           ws: true,
           changeOrigin: true,
           pathRewrite: {
