@@ -3,13 +3,13 @@
         <div class="wrapper">
             <div class="content-box" style="width: 300px;">
                 <div class="title">PRODUCTS</div>
-                <div class="content" @click="openPath" style="cursor: pointer;">
+                <div class="content" @click="openPath('product')" style="cursor: pointer;">
                     HOT PRODUCTS
                 </div>
             </div>
             <div class="content-box" style="width: 300px;">
                 <div class="title">ABOUT US</div>
-                <div class="content" @click="openPath" style="cursor: pointer;">
+                <div class="content" @click="openPath('about')" style="cursor: pointer;">
                     ABOUT US
                 </div>
             </div>
@@ -59,20 +59,25 @@
 <script>
 import { reactive, ref } from 'vue'
 import { Printer, Iphone, Message, Location } from '@element-plus/icons-vue'
+import { useRouter } from "vue-router";
 export default {
     name: 'ProductShopFooter',
     components: {
         Printer, Iphone, Message, Location
     },
     setup() {
-        const openPath = () => {
-            window.open()
+        const router = new useRouter()
+        const openPath = (path) => {
+            router.push('/' + path)
         }
+//         Tel:  13173896881
+// Email:qiqitex@outlook.com
+// Address:  A138, No 585，Airport Rd,Tangjing Street,Baiyun District,Guangzhou,Guangdong,China
         let dataInfo = ref({
-            tel: '020 222 3333 4444',
-            phone: '+86 138001380000',
-            email: 'xxxxxxx@gmail.com',
-            address: '201-205, Building B, Workshop, Huanghe Science And Trade Industrial Park, Shibei Industrial Avenue, Huijiang, Dashi Stree'
+            tel: '13173896881',
+            phone: '+86 13173896881',
+            email: 'qiqitex@outlook.comm',
+            address: 'A138, No 585，Airport Rd,Tangjing Street,Baiyun District,Guangzhou,Guangdong,China'
         })
         let iconList = reactive([
             {

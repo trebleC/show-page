@@ -25,7 +25,7 @@
             </div>
 
             <div class="list-box">
-                <div class="head">{{ activeName }}</div>
+                <div class="head">{{ activeName }}  <span class="desc">Total {{ totalCount }}</span></div>
 
                     <el-skeleton style="width: 100%;" class="list" :loading="loading" animated :count="9">
                         <template #template>
@@ -66,27 +66,29 @@
             
 
 
-                <!-- <div class="pagination-wrapper">
+                <div class="pagination-wrapper" v-if="total>1">
                     <div class="pagination-box">
 
                         <div class="btn btn-pre" :style="pageNo == 1 ? 'cursor:not-allowed' : ''"
                             @click="onPageChange(pageNo - 1)">{{ "<<" }}
                         </div>
-
-                        <div :class="['btn', 'btn-page', item == pageNo ? 'btn-active' : '']" v-for="item in total"
-                            @click="onPageChange(item)">
-                            {{ item }}
-                        </div>
+                        <template  v-for="item in countNo">
+                            <div :class="['btn', 'btn-page', item == pageNo ? 'btn-active' : '']"
+                                @click="onPageChange(item)">
+                                {{ item }}
+                            </div>
+                        </template>
+               
                         <div class="btn btn-pre" :style="pageNo == total ? 'cursor:not-allowed' : ''"
                             @click="onPageChange(pageNo + 1)">
                             {{ ">>" }}
                         </div>
 
-                        PAGE:<input v-model="pageSize" />
-                        <div class="btn btn-go" @click="onPageChange(pageSize)">GO</div>
+                        PAGE:<input v-model="pageSearch" />
+                        <div class="btn btn-go" @click="onPageChange(pageSearch)">GO</div>
 
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -118,13 +120,34 @@ export default {
         let hotList = ref([]);
         const activeName = ref("");
         const pageNo = ref(1);
-        const total = ref(3);
-        const pageSize = ref(1);
+        const total = ref(0);
+        const totalCount = ref(0)
+        const pageSize = ref(9);
+        const pageSearch = ref(pageNo.value)
         let name = router.currentRoute.value.query.name
 
         const loading = ref(true)
 
-
+        let countNo = computed(()=>{
+            
+            if(pageNo.value == 1){
+                let res = [pageNo.value,pageNo.value+1]
+                if(total.value>2){
+                    res.push(pageNo.value+2)
+                }
+                return res 
+            }
+            else if(pageNo.value == total.value){
+                if(total.value>2){
+                    return [pageNo.value-2,pageNo.value-1,pageNo.value]
+                }else{
+                    return [pageNo.value-1,pageNo.value]
+                }
+            }else{
+                return [pageNo.value-1,pageNo.value,+pageNo.value+1]
+            }
+           
+        })
 
         let activeId = ref(router.currentRoute.value.query.categoryId || 'all');
         const cateNameChange = () => {
@@ -137,6 +160,10 @@ export default {
             });
         };
         const getList = () => {
+            window.scrollTop= 0
+            document.body.scrollTop=0
+            document.documentElement.scrollTop = 0
+            loading.value = true
             let query = {
                 categoryId: activeId.value == 'all' ? '' : activeId.value,
                 pageNo: pageNo.value,
@@ -147,6 +174,8 @@ export default {
             }
             queryGoodList(query).then((res) => {
                 loading.value = false
+                totalCount.value = res.total
+                total.value = Math.ceil(res.total / pageSize.value)
                 productList.value = res.data.map((item) => {
                     item.imageUrl = item.attachments.length
                         ? BASR_URL + item.attachments[0].url
@@ -191,6 +220,7 @@ export default {
         const onSelectMenu = (item) => {
             loading.value = true
             name = ''
+            pageNo.value = 1
             activeId.value = item.categoryId;
             activeName.value = item.categoryName;
             getList();
@@ -220,7 +250,10 @@ export default {
             pageSize,
             onPageChange,
             total,
-            loading
+            loading,
+            countNo,
+            pageSearch,
+            totalCount
         };
     },
 };
@@ -363,6 +396,12 @@ export default {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: flex;
+            justify-content: space-between;
+        }
+        .desc{
+            font-size: 14px;
+            color: #999;
         }
 
         .list {
@@ -497,10 +536,10 @@ export default {
         margin-right: 0;
     }
 }
-/deep/ .el-space{
+:deep(.el-space){
     width: 100%;
 }
-/deep/ .el-space__item{
+:deep(.el-space__item){
     width: 100%;
 }
 </style>

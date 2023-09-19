@@ -72,7 +72,7 @@
         <div class="table" v-if="infoData">
             <table>
                 <template v-for="(item, index) in infoData.specification" :key="index">
-                    <tr v-if="item.label">
+                    <tr v-if="item.label && item.value">
                         <td>{{ item.label }}</td>
                         <td>{{ item.value }}</td>
                     </tr>
@@ -317,7 +317,7 @@ Customized service : Support Color / Style Custom`
         }
     }
 }
-/deep/ .el-space__item{
+:deep(.el-space__item){
     width: 100%;
 }
 </style>

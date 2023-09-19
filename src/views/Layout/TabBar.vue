@@ -1,7 +1,7 @@
 <template>
     <div :class="['tab-bar']" :style="[tabStyle]">
         <div class="tabs">
-            <img class="logo" src="../../assets/logo.png" alt="" srcset="">
+            <img class="logo" :src="baseUrl+'/logo/logo.png'" alt="" srcset="">
             <div :class="['tab', { active: isActive(item.key) }]" v-for="(item, index) in tabs" :key="index"
                 @click="onNav(item)">{{ item.name }}</div>
             <div class="options" v-if="activeKey == 'home'">
@@ -23,12 +23,14 @@ import { Search } from "@element-plus/icons-vue";
 import { ref, onMounted, onUnmounted, reactive, watch,nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import {useStore} from "vuex"
+import {BASR_URL} from '@/config'
 export default {
     name: 'TabBar',
     components: { Search },
     setup(props, ctx) {
         const store = useStore();
         const router = new useRouter()
+        const baseUrl = ref(BASR_URL)
         const activeKey = ref(router.currentRoute.value.path.replace('/', '').toLowerCase() || 'home')
         const tabs = reactive([{
             name: 'HOME',
@@ -95,7 +97,8 @@ export default {
             onNav,
             tabStyle,
             activeKey,
-            isActive
+            isActive,
+            baseUrl
         }
     }
 }
@@ -124,10 +127,12 @@ export default {
     box-sizing: border-box;
 
     .logo {
-        width: 67px;
+        width: 158px;
         height: 67px;
         position: relative;
         right: 50px;
+        object-fit: cover;
+        margin-left: -50px;
     }
 
     .tabs {

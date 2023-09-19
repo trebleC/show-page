@@ -7,7 +7,7 @@
         <div class="content" v-html="content"></div>
 
         <div class="photo-wall">
-            <img class="large" :src="imgArr[1]" alt="">
+            <img class="large" :src="imgArr[0]" alt="">
             <div class="small-box">
                 <img class="small" :src="imgArr[1]" alt="">
                 <img class="small" :src="imgArr[2]" alt="">
@@ -19,26 +19,23 @@
     
 <script>
 import { ref, reactive, onMounted } from 'vue'
+import { BASR_URL } from '@/config';
 export default {
     name: 'About',
     components: {},
     setup() {
         const content = ref('')
-        content.value = `GUANGZHOU QIQI TEXTILE CO.,LTD , Ltd. founded in 2015, is an industrial & trade integrated company with solid strength in R&D, designing and customized.
-
-Vitas Lace has focused on the high-end embroidery fabric industry for more than 6 years with main products like: embroidery lace, wedding accessories, veil, etc.. Her products have been widely used in high-end wedding dresses, gowns, apparel, home textile and so on. Moreover, her products have been exported to many countries and regions around the world.
-
-With senior embroidery teams, outstanding design groups and strongest sale department, could be meet with different request in R&D, producting, shipping and after service.
-
-Vitas Lace has official import and export licensen to make sure each cooperation in safety.
-
-Being innovative has always been Vitas Lace core designing concept. By emphasizing product development, now her successively been one of the pioneers in embroidery lace industry . With insistence in "CUSTOMER FIRST" service conception and strictly control on product quality as well as delivery time, she has won unanimous applause from local and foreign customers. Vitas Lace believe integrity cooperation creates win-win future. Looking forward to working with you.`
+        content.value = `<p>QiQi Textiles Co.,Ltd. is an enterprise integrating designs, customization, production and sales.</p>
+        <p>We have a wide range of production lines, the main products are lace,fabric, satin. And some materials used to make wedding and evening dresses.</p>
+            <p>Our company is with Taiwan's production technology and production process, Our product elements follow the fashion,and the styles designs are updated frequently.</p>
+                <p>We focus on steady quality, competitive price and excellent service all the time.We exported to all over the world, Europe, South and North American, Mid-east and South East Asia etc.</p>
+                    <p>We are keen to provide different ideas to customers and create value for them.`
 
         let imgArr = reactive([])
 
-        imgArr = ['http://localhost:4000/song/14556-20230727043345.jpg',
-            'http://localhost:4000/song/14549-20230726065344.jpg',
-            'http://localhost:4000/song/14549-20230726065344.jpg'
+        imgArr = [BASR_URL+'/logo/fa1.jpg',
+        BASR_URL+'/logo/fa2.jpg',
+        BASR_URL+'/logo/fa3.jpg'
         ]
 
 
@@ -99,6 +96,7 @@ Being innovative has always been Vitas Lace core designing concept. By emphasizi
     justify-content: space-between;
     .content{
         flex:1;
+        text-indent: 32px;word-break: keep-all;
     }
     .photo-wall{
         img{

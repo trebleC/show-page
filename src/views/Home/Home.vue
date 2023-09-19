@@ -73,10 +73,11 @@ export default {
         }
 
         let deptDesc = ref('')
-        deptDesc.value = `GUANGZHOU QIQI TEXTILE CO.,LTD, is a comprehensive enterprise integrating R&D, design, production and sale. Specialized in wedding dress fabric, we are fully commited to producing high-quality wedding fabric which involved in wedding dress, fashion, home textiles and other fields.\n
-With a wide variety of products and good after-sales service, our products sell well in domestic and intermational market,such as Europe, USA, the Middle East and other countries.\n
-
-We have our own design teams which master in embroidery.With more than 40pcs lace producing machines and strict process quality control,our quality and delivery time could be assured well.We pursue the tenet of "Quality fitst,Service is supreme.We sincerely welcome customers from all over the world to contact us for future business relationships and achieve mutual success!`
+        deptDesc.value = `QiQi Textiles Co.,Ltd. is an enterprise integrating designs,customization,production and sales.\n
+We have a wide range of production lines,the main products are lace,fabric,satin.And some materials used to make wedding and evening dresses.\n
+  Our company is with Taiwan's production technology and production process,Our product elements follow the fashion,and the styles designs are updated frequently.\n
+  We focus on steady quality,competitive price and excellent service all the time.We exported to all over the world, Europe, South and North American ,Mid-east and South East Asia etc.\n
+We are keen to provide different ideas to customers and create value for them.`
 
 
 
