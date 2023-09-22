@@ -50,7 +50,7 @@ export default {
         let carouselBox = ref(null)
         let carouselHeight = ref('400px')
         let carouselList = reactive([{
-            imageUrl: BASR_URL+'/logo/banner.jpg',
+            imageUrl: BASR_URL+'/logo/banner1.jpg',
             url: ''
         },
         {
