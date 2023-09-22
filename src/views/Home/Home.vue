@@ -50,12 +50,12 @@ export default {
         let carouselBox = ref(null)
         let carouselHeight = ref('400px')
         let carouselList = reactive([{
-            imageUrl: BASR_URL+'/upload/banner.png',
-            url: 'https://www.baidu.com/'
+            imageUrl: BASR_URL+'/logo/banner.jpg',
+            url: ''
         },
         {
             imageUrl: BASR_URL+ '/upload/banner2.png',
-            url: 'https://www.baidu.com/'
+            url: ''
         }
         ])
         onMounted(() => {
@@ -69,6 +69,7 @@ export default {
 
         })
         const jumpPage = (item) => {
+            if(!item.url)return
             window.open(item.url)
         }
 
