@@ -1,4 +1,8 @@
 const { defineConfig } = require('@vue/cli-service')
+const AutoImport = require('unplugin-auto-import/webpack')
+const Components = require('unplugin-vue-components/webpack')
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
+
 const path = require('path')
 
 function assetsPath(_path) {
@@ -98,4 +102,13 @@ let config = {
   if(process.env.NODE_ENV === 'production'){
     config.configureWebpack.externals = externals
   }
+
+  config.configureWebpack.plugins = [
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }),
+  ]
 module.exports = defineConfig(config)
