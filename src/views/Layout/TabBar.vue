@@ -44,10 +44,11 @@ export default {
             name: 'ABOUT US',
             key: 'about'
         },
+        // {
+        //     name: 'NEWS',
+        //     key: 'news'
+        // }, 
         {
-            name: 'NEWS',
-            key: 'news'
-        }, {
             name: 'CONTACT US',
             key: 'contact'
         }])
