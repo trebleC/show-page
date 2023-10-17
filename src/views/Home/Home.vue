@@ -24,11 +24,11 @@
             <div class="common-title">HOT PRODUCTIONS</div>
             <hot-list />
         </div>
-
+<!-- 
         <div class="content-box">
             <div class="common-title">NEW & EVENTS</div>
             <news />
-        </div>
+        </div> -->
 
 
     </div>

@@ -76,7 +76,7 @@ export default {
         let dataInfo = ref({
             tel: '13173896881',
             phone: '+86 13173896881',
-            email: 'qiqitex@outlook.comm',
+            email: 'qiqitex@outlook.com',
             address: 'A138, No 585，Airport Rd,Tangjing Street,Baiyun District,Guangzhou,Guangdong,China'
         })
         let iconList = reactive([

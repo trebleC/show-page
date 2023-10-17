@@ -1,5 +1,19 @@
+FROM centos AS build
+
+
+
+# install git 
+RUN yum install -y git \
+    git clone https://github.com/trebleC/show-page.git /app
+
+
+# 设置工作目录
+WORKDIR /app
+
+CMD ["echo", "Docker image built and pushed successfully."]
+
 # # 使用基础的Node.js镜像
-# FROM node:18.16.0 as builder
+# FROM node:16.14.2 as builder
 
 # # 设置工作目录
 # WORKDIR /app
@@ -15,7 +29,7 @@
 # RUN npm run build
 
 # # 拉取nginx镜像
-# FROM nginx:1.21.1-alpine AS production
+# # FROM nginx:1.21.1-alpine AS production
 
 # # 把打包好的文件移到 docker拉取的nginx镜像默认读取路径里（/usr/share/nginx/html）
 # COPY --from=builder /app/dist /usr/share/nginx/html
